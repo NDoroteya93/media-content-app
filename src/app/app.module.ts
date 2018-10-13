@@ -1,21 +1,29 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { SharedModule } from './shared/shared.module';
 
 // Components
 import { AppComponent } from './app.component';
+import { LayoutComponent } from './components/layout/layout.component';
+import { TabsComponent } from './components/layout/tabs/tabs.component';
+import { TabComponent } from './components/layout/tabs/tab/tab.component';
+import { MediaListComponent } from './components/media/media-list/media-list.component';
 
-// Modules
-import { LayoutModule } from './modules/layout/layout.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LayoutComponent,
+    TabsComponent,
+    TabComponent,
+    MediaListComponent
   ],
   imports: [
-    BrowserModule, 
-    LayoutModule
+    BrowserModule,
+    SharedModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent], 
+  entryComponents: [TabComponent]
 })
 export class AppModule { }
