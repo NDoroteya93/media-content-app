@@ -1,0 +1,26 @@
+@import '../../../../assets/scss/base/colors';
+
+.navbar { 
+  border-bottom: 1px solid $light-gray-1;
+
+  .nav-tabs { 
+    border: none; 
+
+    .nav-link { 
+      &.active { 
+        margin-bottom: -1px;
+      }
+    }
+  }
+}
+
+.btn, .tab-close { 
+  border-radius: 50%;
+  color: $middle-gray;
+  font-size: 0.7rem;
+  
+  &:hover {
+    background-color: $light-gray-1;
+    opacity: 0.5;
+  }
+}

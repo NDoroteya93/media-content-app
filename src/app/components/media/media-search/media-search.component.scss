@@ -1,0 +1,22 @@
+@import '../../../../assets/scss/base/colors';
+
+.media-search { 
+  .fa-search {
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: $middle-gray;
+  }
+
+  input {
+    &:hover {
+      box-shadow: 0 0.125rem 1.25rem rgba(0, 0, 0, 0.075) !important;
+    } 
+  }
+}

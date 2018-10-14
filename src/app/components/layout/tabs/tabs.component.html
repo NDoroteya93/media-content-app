@@ -1,11 +1,34 @@
-<ul class="nav nav-tabs" role="tablist" >
-  <li class="nav-item" *ngFor="let tab of tabs">
-    <a class="nav-link" href="#" role="tab" data-toggle="tab" [class.active]="tab.active">{{ tab.tabTitle }}</a>
-  </li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-0">
+  <div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="nav nav-tabs">
+        <!-- STATIC TAB -->
+        <li class="nav-item" *ngFor="let tab of tabs" (click)="selectTab(tab)">
+          <a class="nav-link" [class.active]="tab.active">{{ tab.tabTitle }}</a>
+        </li>
+        
+        <!-- DYNAMIC TAB -->
+        <li class="nat-item" *ngFor="let tab of dynamicTabs" (click)="selectTab(tab)">
+          <a class="nav-link" [class.active]="tab.active">{{tab.tabTitle}} 
+            <span class="btn btn-sm tab-close pl-1 pr-1 pt-0 pb-0" *ngIf="tab.isCloseable" (click)="closeTab(tab)">
+              <span class="fa fa-times" aria-hidden="true"></span>
+            </span>
+          </a>
+        </li>
 
-  <li class="nat-item" *ngFor="let tab of dynamicTabs" (click)="selectTab(tab)" [class.active]="tab.active">
-    <a class="nav-link" href="#" role="tab" data-toggle="tab">{{tab.tabTitle}} <span class="tab-close" *ngIf="tab.isCloseable">x</span></a>
-  </li>
-</ul>
+        <!-- OPEN NEW TAB -->
+        <li class="nat-item">
+          <button type="button" class="btn btn-default bg-light btn-sm ml-1 mt-2" aria-label="New button" (click)="openTab()">
+            <span class="fa fa-plus" aria-hidden="true"></span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 <ng-content></ng-content>
 <ng-template appTabs #tabContainer></ng-template>
