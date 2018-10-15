@@ -1,4 +1,4 @@
 <div class="container-fluid">
-  <app-media-search></app-media-search>
+  <app-media-search (searchImages)="onSearchImages($event)" (searchVideos)="onSearchVideos($event)"></app-media-search>
   <app-media-list></app-media-list>  
 </div>

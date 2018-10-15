@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { SharedModule } from './shared/shared.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Components
 import { AppComponent } from './app.component';
@@ -10,6 +11,7 @@ import { TabComponent } from './components/layout/tabs/tab/tab.component';
 import { MediaListComponent } from './components/media/media-list/media-list.component';
 import { MediaSearchComponent } from './components/media/media-search/media-search.component';
 import { MediaComponent } from './components/media/media.component';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
@@ -18,12 +20,15 @@ import { MediaComponent } from './components/media/media.component';
     TabsComponent,
     TabComponent,
     MediaListComponent,
-    MediaSearchComponent, 
+    MediaSearchComponent,
     MediaComponent
   ],
   imports: [
     BrowserModule,
-    SharedModule
+    SharedModule,
+    CoreModule, 
+    ReactiveFormsModule, 
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],
