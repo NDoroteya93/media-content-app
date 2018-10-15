@@ -1,43 +1,38 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-media-search',
   templateUrl: './media-search.component.html',
   styleUrls: ['./media-search.component.scss']
 })
-export class MediaSearchComponent {
+export class MediaSearchComponent implements OnInit {
 
-  @Output() searchVideos = new EventEmitter<Observable<any>>();
-  @Output() searchImages = new EventEmitter<string>();
+  @Output() searchVideos = new EventEmitter<Subject<any>>();
+  @Output() searchImages = new EventEmitter<Subject<any>>();
 
-  public searchForm: FormGroup; 
+  public searchForm: FormGroup;
   private searchTerm$: Subject<any>;
 
   constructor(private formBuilder: FormBuilder) {
+    this.searchTerm$ = new Subject<any>();
+  }
 
+  public ngOnInit(): void {
     this.initForm();
     this.onSearch();
   }
 
   public onSearch(): void {
     this.searchForm.controls.search.valueChanges
-      .pipe(
-        filter((value: string) => value.length > 2),
-        debounceTime(500),
-        distinctUntilChanged(),
-        switchMap(result => {
-          debugger;
-          console.log(result);
-          return result;
-        })
-      );
+      .subscribe(result => {
+       this.searchTerm$.next(result);
+      });
+    this.searchVideos.emit(this.searchTerm$);
   }
 
   private initForm(): void {
-    debugger;
     this.searchForm = this.formBuilder.group({
       search: ['', Validators.required]
     });

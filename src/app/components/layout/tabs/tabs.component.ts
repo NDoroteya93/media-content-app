@@ -4,7 +4,8 @@ import {
   QueryList,
   AfterContentInit,
   ComponentFactoryResolver,
-  ViewChild
+  ViewChild, 
+  Input
 } from '@angular/core';
 import { TabComponent } from './tab/tab.component';
 import { TabsDirective } from '../../../shared/directives/tabs.directive';
@@ -15,6 +16,8 @@ import { TabsDirective } from '../../../shared/directives/tabs.directive';
   styleUrls: ['./tabs.component.scss']
 })
 export class TabsComponent implements AfterContentInit {
+
+  @Input() public isStatic: boolean;
 
   @ContentChildren(TabComponent) public tabs: QueryList<TabComponent>;
 
@@ -76,14 +79,11 @@ export class TabsComponent implements AfterContentInit {
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
 
-    const tabId = `tab-${this.dynamicTabs.length}`;
-
     const instance: TabComponent = componentRef.instance as TabComponent;
     instance.tabTitle = title;
     instance.isCloseable = isCloseable;
     instance.template = template;
     // instance.data = data;
-    instance.id = tabId;
 
     this.dynamicTabs.push(componentRef.instance as TabComponent);
 

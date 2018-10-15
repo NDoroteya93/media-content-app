@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light p-0">
+<nav class="navbar navbar-expand-lg navbar-light p-0" [class.bg-light]="!isStatic">
   <div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -7,7 +7,9 @@
       <ul class="nav nav-tabs">
         <!-- STATIC TAB -->
         <li class="nav-item" *ngFor="let tab of tabs" (click)="selectTab(tab)">
-          <a class="nav-link" [class.active]="tab.active">{{ tab.tabTitle }}</a>
+          <a class="nav-link" [class.active]="tab.active" [class.nav-link-static]="isStatic">
+            {{ tab.tabTitle }}
+          </a>
         </li>
         
         <!-- DYNAMIC TAB -->
@@ -20,7 +22,7 @@
         </li>
 
         <!-- OPEN NEW TAB -->
-        <li class="nat-item">
+        <li class="nat-item" *ngIf="!isStatic">
           <button type="button" class="btn btn-default bg-light btn-sm ml-1 mt-2" aria-label="New button" (click)="openTab()">
             <span class="fa fa-plus" aria-hidden="true"></span>
           </button>

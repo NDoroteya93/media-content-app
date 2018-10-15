@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MediaService } from '../../core/media/media.service';
+import { Subject } from 'rxjs';
+import { YouTubeData } from 'src/app/shared/interfaces/youtube-data.interface';
 
 @Component({
   selector: 'app-media',
@@ -8,22 +10,22 @@ import { MediaService } from '../../core/media/media.service';
 })
 export class MediaComponent implements OnInit {
 
-  public videosResult: any;
-  public imagesResult: any;
+  public videosResult: YouTubeData[];
+  public imagesResult: any[];
+  public allResult: any[];
 
   constructor(private mediaService: MediaService) { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
   }
 
-  public onSearchVideos(term: string): void {
-
-    this.mediaService.getYoutubeVideos(term, 1)
-    .subscribe(videos => (this.videosResult = videos));
+  public onSearchVideos(term: Subject<any>): void {
+    this.mediaService.search(term).subscribe(result => {
+      this.videosResult = result.items;
+    });
   }
 
   public onSearchImages(term: string): void {
-
     this.mediaService.getImages(term, 1)
     .subscribe(images => (this.imagesResult = images));
   }

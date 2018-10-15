@@ -1,4 +1,15 @@
 <div class="container-fluid">
+  <!-- SEARCH FIELD -->
   <app-media-search (searchImages)="onSearchImages($event)" (searchVideos)="onSearchVideos($event)"></app-media-search>
-  <app-media-list></app-media-list>  
+  <!-- SUBTABS -->
+  <app-tabs [isStatic]="true">
+    <app-tab tabTitle="All" [template]="mediaList" [data]="allResult"></app-tab>
+    <app-tab tabTitle="Images" [template]="mediaList" [data]="imagesResult"></app-tab>
+    <app-tab tabTitle="Videos" [template]="mediaList" [data]="videosResult"></app-tab>
+  </app-tabs>
 </div>
+
+<ng-template let-media="media" #mediaList>
+  <!-- IMAGE AND VIDEO LIST -->
+  <app-media-list></app-media-list>
+</ng-template>

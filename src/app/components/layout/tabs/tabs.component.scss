@@ -7,8 +7,20 @@
     border: none; 
 
     .nav-link { 
+      cursor: pointer;
       &.active { 
         margin-bottom: -1px;
+      }
+
+      &.nav-link-static { 
+        border-color: transparent;
+        &.active {
+          border-bottom: 3px solid $middle-blue;
+        }
+
+        &:hover { 
+          font-weight: 600;
+        }
       }
     }
   }
