@@ -13,20 +13,36 @@ export class MediaComponent implements OnInit {
   public videosResult: YouTubeData[];
   public imagesResult: any[];
   public allResult: any[];
+  public nextPage: string;
 
-  constructor(private mediaService: MediaService) { }
+  private searchTerm$: Subject<any>;
+
+  constructor(private mediaService: MediaService) {
+    this.videosResult = [];
+   }
 
   public ngOnInit(): void {
   }
 
-  public onSearchVideos(term: Subject<any>): void {
-    this.mediaService.search(term).subscribe(result => {
-      this.videosResult = result.items;
+  public onSearchVideos(term: Subject<any>, page?: string): void {
+    this.searchTerm$ = term;
+    this.mediaService.search(term, this.nextPage || null).subscribe(result => {
+      debugger;
+      if (result.nextPageToken) {
+        this.nextPage = result.nextPageToken;
+      }
+
+      this.videosResult = [...this.videosResult, ...result.items];
+      this.allResult = result.items;
     });
   }
 
+  public appendItems(): void {
+    this.onSearchVideos(this.searchTerm$, this.nextPage);
+  }
+
   public onSearchImages(term: string): void {
-    this.mediaService.getImages(term, 1)
+    this.mediaService.getImages(term)
     .subscribe(images => (this.imagesResult = images));
   }
 

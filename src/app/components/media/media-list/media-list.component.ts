@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, OnChanges } from '@angular/core';
 import { YouTubeData } from 'src/app/shared/interfaces/youtube-data.interface';
 
 @Component({
@@ -6,13 +6,22 @@ import { YouTubeData } from 'src/app/shared/interfaces/youtube-data.interface';
   templateUrl: './media-list.component.html',
   styleUrls: ['./media-list.component.scss']
 })
-export class MediaListComponent implements OnInit {
+export class MediaListComponent implements OnChanges {
 
-  @Input() videos: YouTubeData[];
+  @Input() public mediaList: YouTubeData[];
+  @Output() getMoreItems  = new EventEmitter<any>();
+
+  public mediaScrollDistance = 2;
+  public mediaScrollThrottle = 50;
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnChanges(currentData) {
+    console.log(currentData);
+  }
+
+  public onMediaScrollDown(): void {
+    this.getMoreItems.emit();
   }
 
 }

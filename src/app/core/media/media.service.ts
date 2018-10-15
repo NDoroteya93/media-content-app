@@ -11,7 +11,7 @@ export class MediaService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public search(terms: Observable<any>): Observable<any> {
+  public search(terms: Observable<any>, page?: string): Observable<any> {
     return terms.pipe(
         filter((value: string) => value.length > 2),
         debounceTime(500),
@@ -20,20 +20,22 @@ export class MediaService {
         );
   }
 
-  public getYoutubeVideos(searchTerm: string, page?: number): Observable<any> {
-    return this.httpClient.get(
-      `${appConfig.youTubeEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&maxResults=20&part=snippet&type=video`
-      );
+  public getYoutubeVideos(searchTerm: string, page?: string): Observable<any> {
+    const url = page
+      ? `${appConfig.youTubeEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&maxResults=20&part=snippet&type=video&pageToken=${page}`
+      : `${appConfig.youTubeEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&maxResults=20&part=snippet&type=video`;
+
+    return this.httpClient.get(url);
   }
 
-  public getImages(searchTerm: string, page?: number): Observable<any> {
+  public getImages(searchTerm: string, page?: string): Observable<any> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Cache-Control', 'no-cache');
     const options = { headers, responseType: 'json' };
 
     return this.httpClient.get(
-      `${appConfig.customSearchEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&searchType=image&cx=${appConfig.cx_id}`
+      `${appConfig.customSearchEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&cx=${appConfig.cx_id}`
     );
   }
 }

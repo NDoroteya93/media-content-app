@@ -1,5 +1,13 @@
 <div [hidden]="!active" class="tab-pane">
   <ng-content></ng-content>
   <!-- Dynamicaly render the passed in template -->
-  <ng-container *ngIf="template" [ngTemplateOutlet]="template"></ng-container>
+  <ng-container *ngIf="template && data" 
+    [ngTemplateOutlet]="template"
+    [ngTemplateOutletContext]="{ media: data }"
+  ></ng-container>
+  
+  <ng-container *ngIf="template && !data" 
+    [ngTemplateOutlet]="template"
+  ></ng-container>
+  
 </div>

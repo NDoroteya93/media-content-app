@@ -12,8 +12,7 @@ export class LayoutComponent implements AfterViewInit {
   @ViewChild('mediaList') public mediaListTemplate: MediaListComponent;
   @ViewChild(TabsComponent) public tabsComponent: TabsComponent;
 
-  public ngAfterViewInit(): void { 
+  public ngAfterViewInit(): void {
     this.tabsComponent.newTabTemplate = this.mediaListTemplate;
   }
-
 }

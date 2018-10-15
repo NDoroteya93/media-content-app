@@ -10,7 +10,7 @@ export interface YouTubeData {
     thumbnails: {
       default: Thumbnail;
       medium: Thumbnail;
-      hight: Thumbnail;
+      high: Thumbnail;
     }
   channelTitle: string;
   liveBroadcastContent: string;

@@ -12,6 +12,7 @@ import { MediaListComponent } from './components/media/media-list/media-list.com
 import { MediaSearchComponent } from './components/media/media-search/media-search.component';
 import { MediaComponent } from './components/media/media.component';
 import { CoreModule } from './core/core.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -26,9 +27,10 @@ import { CoreModule } from './core/core.module';
   imports: [
     BrowserModule,
     SharedModule,
-    CoreModule, 
-    ReactiveFormsModule, 
-    FormsModule
+    CoreModule,
+    ReactiveFormsModule,
+    FormsModule,
+    InfiniteScrollModule
   ],
   providers: [],
   bootstrap: [AppComponent],
