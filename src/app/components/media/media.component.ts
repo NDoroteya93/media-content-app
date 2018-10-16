@@ -1,65 +1,89 @@
-import { Component, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+
+// Services
 import { MediaService } from '../../core/media/media.service';
-import { Subject } from 'rxjs';
-import { YouTubeData } from 'src/app/shared/interfaces/youtube-data.interface';
+import { StorageService } from '../../core/storage/storage.service';
+
+// Interfaces and Models
+import { SubTabsMapArray, TabTypes } from '../../shared/const/sub-tabs.const';
+import { Media } from 'src/app/shared/models/media.models';
 
 @Component({
   selector: 'app-media',
   templateUrl: './media.component.html',
   styleUrls: ['./media.component.scss']
 })
-export class MediaComponent implements OnInit {
+export class MediaComponent implements OnInit, OnDestroy {
 
-  public videosResult: YouTubeData[];
-  public imagesResult: any[];
-  public allResult: any[];
-  public nextPage: string;
-  public searchActionEmitter = new EventEmitter<string>();
+  public subTabsData = SubTabsMapArray;
+  public tabTypes = TabTypes;
+  public result;
 
-  private searchTerm$: Subject<any>;
-  
+  public searchTerm: string;
+  public activeTabData;
+  private tabChangeSubs: Subscription;
 
-  constructor(private mediaService: MediaService, private cf: ChangeDetectorRef) {
-    this.videosResult = [];
-   }
+  constructor(
+    private mediaService: MediaService,
+    private cd: ChangeDetectorRef,
+    private storage: StorageService
+    ) {
+      this.onChangeTab();
+    }
 
   public ngOnInit(): void {
-    this.searchActionEmitter.subscribe(res => { 
-      switch(res) {
-        case 'image':
-          console.log('image');
-          break;
-        case 'videos':
-          console.log('image');
-          break;
-        default:
-          break;
-          
-      }
-    })
+    this.activeTabData = {
+      ...this.storage.getStorage().filter(tab => tab.value.active)[0].value,
+      id: this.storage.getStorage().filter(tab => tab.value.active)[0].key
+    }
+  }
+  
+  public ngOnDestroy(): void {
+    if (this.tabChangeSubs) {
+      this.tabChangeSubs.unsubscribe();
+    }
   }
 
-  public onSearchVideos(term: Subject<any>, page?: string): void {
-    this.searchTerm$ = term;
-    this.mediaService.search(term, this.nextPage || null).subscribe(result => {
-      // this.videosResult = [...this.videosResult, ...result.items];
-      this.videosResult = result.items;
-      this.cf.detectChanges();
-      // debugger;
-      if (result.nextPageToken) {
-        this.nextPage = result.nextPageToken;
-      }
+  public onSearch(term: Subject<any>): void {
 
+    term.subscribe(result => this.searchTerm = result);
+
+    this.mediaService
+      .search(term)
+      .subscribe(result => {
+          // Set Images data
+        // if (result[TabTypes.IMAGES]) {
+        //   this.subTabsData[TabTypes.IMAGES].data = result[0].items
+        //     .map(item => Media.getFromData(item));
+        //   this.subTabsData[TabTypes.IMAGES].page = result[0].queries.nextPage;
+        // }
+
+        //   // Set videos data
+        // if (result[TabTypes.VIDEOS]) {
+        //   this.subTabsData[TabTypes.VIDEOS].data = result[TabTypes.VIDEOS].items
+        //     .map(item => Media.getFromData(item));
+        //   this.subTabsData[TabTypes.VIDEOS].page = result[TabTypes.VIDEOS].nextPageToken;
+        // }
+        this.result = result.items.map(data => Media.getFromData(data));
+
+        this.activeTabData.data = this.result;
+        this.activeTabData.search = this.searchTerm;
+        this.storage.store(this.activeTabData.id, this.activeTabData);
+
+        this.cd.detectChanges();
     });
   }
 
-  public appendItems(): void {
-    this.onSearchVideos(this.searchTerm$, this.nextPage);
-  }
+  private onChangeTab(): void {
+    
+    this.tabChangeSubs =  this.storage.changes.subscribe(tab => {
+      this.activeTabData = {
+        ...this.storage.getItem(tab.tabId),
+        id: tab.tabId
+      };
 
-  public onSearchImages(term: string): void {
-    this.mediaService.getImages(term)
-    .subscribe(images => (this.imagesResult = images));
+      console.log('update tab', this.activeTabData);
+    });
   }
-
 }

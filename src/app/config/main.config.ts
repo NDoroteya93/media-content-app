@@ -6,7 +6,8 @@ const BASE_CONFIG: any = {
   youTubeEndpoint: 'https://www.googleapis.com/youtube/v3/search',
   customSearchEndpoint: 'https://content.googleapis.com/customsearch/v1',
   api_key: API_KEY,
-  cx_id: CX_ID
+  cx_id: CX_ID,
+  storageKey: 'media-app-data',
 };
 
 const configsMap: any = {

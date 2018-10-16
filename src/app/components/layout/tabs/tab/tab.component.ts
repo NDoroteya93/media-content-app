@@ -10,5 +10,7 @@ export class TabComponent {
   @Input() active = false;
   @Input() isCloseable = false;
   @Input() template;
-  @Input() data;
+  @Input() data = [];
+  @Input() search = '';
+  @Input() id: string;
 }

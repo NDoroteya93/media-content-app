@@ -1,14 +1,15 @@
 <div class="container-fluid">
   <!-- SEARCH FIELD -->
-  <app-media-search (searchImages)="onSearchImages($event)" (searchVideos)="onSearchVideos($event)"></app-media-search>
+  <app-media-search (search)="onSearch($event)"></app-media-search>
   <!-- SUBTABS -->
-  <app-tabs [isStatic]="true" *ngIf="(imagesResult && imagesResult.length > 0) || (videosResult && videosResult.length > 0)">
-    <app-tab *ngIf="imagesResult && imagesResult.length > 0" tabTitle="Images" [template]="mediaList" [data]="imagesResult"></app-tab>
-    <app-tab *ngIf="videosResult && videosResult.length > 0" tabTitle="Videos" [template]="mediaList" [data]="videosResult"></app-tab>
+  <!-- <app-tabs [isStatic]="true" *ngIf="subTabsData[tabTypes.IMAGES].data.length > 0 && subTabsData[tabTypes.VIDEOS].data.length"> -->
+  <app-tabs [isStatic]="true" *ngIf="result">
+    <!-- <app-tab *ngFor="let tab of subTabsData" [tabTitle]="tab.title" [template]="mediaList" [data]="result"></app-tab> -->
+    <app-tab tabTitle="Videos" [template]="mediaList" [data]="result"></app-tab>
   </app-tabs>
 </div>
 
-<ng-template let-media="media" let-type="type" #mediaList>
+<ng-template let-media="media" #mediaList>
   <!-- IMAGE AND VIDEO LIST -->
   <app-media-list [mediaList]="media"></app-media-list>
 </ng-template>

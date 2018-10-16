@@ -9,10 +9,11 @@ import { Subject } from 'rxjs';
 })
 export class MediaSearchComponent implements OnInit {
 
-  @Output() searchVideos = new EventEmitter<Subject<any>>();
-  @Output() searchImages = new EventEmitter<Subject<any>>();
-
+  @Output() public search = new EventEmitter<Subject<any>>();
+  
   public searchForm: FormGroup;
+  public searchString: string;
+
   private searchTerm$: Subject<any>;
 
   constructor(private formBuilder: FormBuilder) {
@@ -29,7 +30,7 @@ export class MediaSearchComponent implements OnInit {
       .subscribe(result => {
        this.searchTerm$.next(result);
       });
-    this.searchVideos.emit(this.searchTerm$);
+    this.search.emit(this.searchTerm$ );
   }
 
   private initForm(): void {

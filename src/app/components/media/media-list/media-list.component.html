@@ -8,12 +8,10 @@
   (scrolled)="onMediaScrollDown()"
   >
   <div class="col-lg-3 col-md-4 col-xs-6 thumb" *ngFor="let media of mediaList">
-    <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title=""
-      data-image="https://images.pexels.com/photos/853168/pexels-photo-853168.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
-      data-target="#image-gallery">
-      <img *ngIf="media.snippet.thumbnails.high" class="img-thumbnail"
-            [src]="media.snippet.thumbnails.high.url"
-            [alt]="media.snippet.title">
+    <a class="thumbnail">
+      <img *ngIf="media.thumbnail" class="img-thumbnail"
+            [src]="media.thumbnail.url"
+            [alt]="media.title">
     </a>
   </div>
 </div>

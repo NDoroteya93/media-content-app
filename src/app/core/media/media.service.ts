@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import appConfig from '../../config/main.config';
-import { filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { filter, debounceTime, distinctUntilChanged, switchMap, mergeMap } from 'rxjs/operators';
+import { Observable, forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +13,14 @@ export class MediaService {
 
   public search(terms: Observable<any>, page?: string): Observable<any> {
     return terms.pipe(
-        filter((value: string) => value.length > 2),
-        debounceTime(500),
-        distinctUntilChanged(),
-        switchMap(result => this.getImages(result))
-        );
+      filter((value: string) => value.length > 2),
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(result => {
+        // return forkJoin([this.getImages(result), this.getYoutubeVideos(result)]);
+        return this.getYoutubeVideos(result);
+      })
+    );
   }
 
   public getYoutubeVideos(searchTerm: string, page?: string): Observable<any> {

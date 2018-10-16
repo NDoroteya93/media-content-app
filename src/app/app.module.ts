@@ -13,6 +13,7 @@ import { MediaSearchComponent } from './components/media/media-search/media-sear
 import { MediaComponent } from './components/media/media.component';
 import { CoreModule } from './core/core.module';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { localStorageProviders } from '@ngx-pwa/local-storage';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     FormsModule,
     InfiniteScrollModule
   ],
-  providers: [],
+  providers: [localStorageProviders({ prefix: 'myapp' })],
   bootstrap: [AppComponent],
   entryComponents: [TabComponent]
 })

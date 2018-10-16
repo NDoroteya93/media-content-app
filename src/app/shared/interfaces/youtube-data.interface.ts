@@ -1,3 +1,5 @@
+import { Thumbnail } from './thumbnail.interface';
+
 export interface YouTubeData {
   kind: string;
   etag: string;
@@ -17,8 +19,3 @@ export interface YouTubeData {
   };
 }
 
-export interface Thumbnail {
-  url: string;
-  width: number;
-  height: number;
-}
