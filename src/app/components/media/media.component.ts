@@ -8,6 +8,7 @@ import { StorageService } from '../../core/storage/storage.service';
 // Interfaces and Models
 import { SubTabsMapArray, TabTypes } from '../../shared/const/sub-tabs.const';
 import { Media } from 'src/app/shared/models/media.models';
+import { StorageData } from '../../shared/interfaces/storage.interface';
 
 @Component({
   selector: 'app-media',
@@ -52,6 +53,7 @@ export class MediaComponent implements OnInit, OnDestroy {
     this.mediaService
       .search(term)
       .subscribe(result => {
+
           // Set Images data
         // if (result[TabTypes.IMAGES]) {
         //   this.subTabsData[TabTypes.IMAGES].data = result[0].items
@@ -65,10 +67,13 @@ export class MediaComponent implements OnInit, OnDestroy {
         //     .map(item => Media.getFromData(item));
         //   this.subTabsData[TabTypes.VIDEOS].page = result[TabTypes.VIDEOS].nextPageToken;
         // }
+
         this.result = result.items.map(data => Media.getFromData(data));
 
         this.activeTabData.data = this.result;
         this.activeTabData.search = this.searchTerm;
+
+        // Store the new changes
         this.storage.store(this.activeTabData.id, this.activeTabData);
 
         this.cd.detectChanges();
@@ -76,14 +81,19 @@ export class MediaComponent implements OnInit, OnDestroy {
   }
 
   private onChangeTab(): void {
-    
-    this.tabChangeSubs =  this.storage.changes.subscribe(tab => {
-      this.activeTabData = {
-        ...this.storage.getItem(tab.tabId),
-        id: tab.tabId
-      };
 
-      console.log('update tab', this.activeTabData);
+    this.tabChangeSubs =  this.storage.changes
+      .subscribe((tab: { tabId: string }) => {
+
+        const storageData: StorageData = this.storage.getItem(tab.tabId);
+
+        this.result = storageData;
+        this.searchTerm = storageData.search;
+        // set data in the storage
+        this.activeTabData = {
+          ...storageData,
+          id: tab.tabId
+        };
     });
   }
 }

@@ -11,7 +11,7 @@ import {
 import { TabComponent } from './tab/tab.component';
 import { TabsDirective } from '../../../shared/directives/tabs.directive';
 import { StorageService } from '../../../core/storage/storage.service';
-import { ThrowStmt } from '@angular/compiler';
+import { StorageData } from '../../../shared/interfaces/storage.interface';
 
 @Component({
   selector: 'app-tabs',
@@ -46,15 +46,10 @@ export class TabsComponent implements AfterContentInit {
   public ngAfterContentInit(): void {
     const activeTabs = this.tabs.filter(tab => tab.active);
 
-    if (!this.tabs.first.id) {
-      this.tabs.first.id  = `tab-${new Date().getUTCMilliseconds()}`;
-      this.tabs.first.active  = true;
-    }
-
-    if (activeTabs.length === 0 && !this.isStatic) {
+    // Set first Initial Tab
+    if (activeTabs.length === 0 && !this.tabs.first.id && !this.isStatic) {
       this.createInitialTab(this.tabs.first);
     }
-
   }
 
   /**
@@ -65,41 +60,44 @@ export class TabsComponent implements AfterContentInit {
    * @memberof TabsComponent
    */
   public selectTab(selectedTab: TabComponent): void {
-    const lastActiveTab = this.storage.getStorage().filter(tab => tab.value.active);
 
+    // Update active tabs in the template
     this.tabs.toArray().forEach(tab => (tab.active = false));
     this.dynamicTabs.forEach(tab => (tab.active = false));
 
     selectedTab.active = true;
 
-    // Set Local storage active tab
-    if (!this.isStatic) {
-      if (lastActiveTab.length > 0) {
-        lastActiveTab[0].value.active = false;
-        this.storage.store(lastActiveTab[0].key, {...lastActiveTab[0].value});
-      }
-
-      const storageData = { data: selectedTab.data, search: selectedTab.search, active: selectedTab.active };
-      this.storage.store(selectedTab.id, storageData);
-    }
+    this.setStorageData(selectedTab.id);
   }
 
+
+
+  /**
+   * @name createInitialTab
+   * @description Activate the initial tab
+   *
+   * @param {TabComponent} selectedTab
+   * @memberof TabsComponent
+   */
   public createInitialTab(selectedTab: TabComponent): void {
-    this.storage.store(selectedTab.id, { data: [], search: '', active: true });
+
+    this.tabs.first.id  = `tab-${new Date().getUTCMilliseconds()}`;
+    this.tabs.first.active  = true;
+
+    const {active, data, search} = this.tabs.first;
+
+    this.storage.store(selectedTab.id, { active, data, search });
   }
+
 
   /**
    * @name openTab
    * @description Get Component factory and fetch the view container reference from appTab directive.
    *  Create a component instance and set the according properties on the component instances
    *
-   * @param {*} template
-   * @param {*} data
-   * @param {boolean} [isCloseable=false]
-   * @param {string} [title='New Tab']
    * @memberof TabsComponent
    */
-  public openTab(isCloseable: boolean = true, template: any = this.newTabTemplate, title: string = 'New Tab'): void {
+  public openTab(): void {
 
     const componentFactory = this._componentFactoryResolver.resolveComponentFactory(
       TabComponent
@@ -110,13 +108,17 @@ export class TabsComponent implements AfterContentInit {
     const componentRef = viewContainerRef.createComponent(componentFactory);
 
     const instance: TabComponent = componentRef.instance as TabComponent;
-    instance.tabTitle = title;
-    instance.isCloseable = isCloseable;
-    instance.template = template;
+    instance.tabTitle = 'New Tab';
+    instance.isCloseable = true;
+    instance.template = this.newTabTemplate;
     instance.id = `tab-${new Date().getUTCMilliseconds()}`;
 
     this.dynamicTabs.push(componentRef.instance as TabComponent);
 
+    // Create initial local storage item
+    this.storage.store(instance.id, {data: [], active: false, search: ''});
+
+    // Select the last element after create a new tab
     this.selectTab(this.dynamicTabs[this.dynamicTabs.length - 1]);
 
     this.cd.detectChanges();
@@ -139,10 +141,39 @@ export class TabsComponent implements AfterContentInit {
 
         viewContainerRef.remove(i);
 
-        this.selectTab(this.tabs.last);
+        // Remove item from local storage
+        this.storage.clear(selectedTab.id);
+
+        this.selectTab(this.tabs.first);
         return false;
       }
     });
+  }
+
+  /**
+   * @name setStorageData
+   * @description
+   *
+   * @private
+   * @param {string} id
+   * @memberof TabsComponent
+   */
+  private setStorageData(id: string): void {
+    const lastActiveTab = this.storage.getStorage().filter(tab => tab.value.active);
+
+    // Set last active element to false
+    if (!this.isStatic) {
+      if (lastActiveTab.length > 0) {
+        lastActiveTab[0].value.active = false;
+        this.storage.store(lastActiveTab[0].key, {...lastActiveTab[0].value});
+      }
+
+      // Set current active element to true
+      const storageData: StorageData = this.storage.getItem(id) as StorageData;
+      storageData.active = true;
+
+      this.storage.store(id, storageData);
+    }
   }
 
 }

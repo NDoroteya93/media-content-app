@@ -1,7 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
+
+// Modules
 import { NgModule } from '@angular/core';
 import { SharedModule } from './shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CoreModule } from './core/core.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Components
 import { AppComponent } from './app.component';
@@ -11,9 +16,7 @@ import { TabComponent } from './components/layout/tabs/tab/tab.component';
 import { MediaListComponent } from './components/media/media-list/media-list.component';
 import { MediaSearchComponent } from './components/media/media-search/media-search.component';
 import { MediaComponent } from './components/media/media.component';
-import { CoreModule } from './core/core.module';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { localStorageProviders } from '@ngx-pwa/local-storage';
+import { MediaCardComponent } from './components/media/media-list/media-card/media-card.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,8 @@ import { localStorageProviders } from '@ngx-pwa/local-storage';
     TabComponent,
     MediaListComponent,
     MediaSearchComponent,
-    MediaComponent
+    MediaComponent,
+    MediaCardComponent
   ],
   imports: [
     BrowserModule,
@@ -31,9 +35,9 @@ import { localStorageProviders } from '@ngx-pwa/local-storage';
     CoreModule,
     ReactiveFormsModule,
     FormsModule,
-    InfiniteScrollModule
+    InfiniteScrollModule, 
+    NgbModule
   ],
-  providers: [localStorageProviders({ prefix: 'myapp' })],
   bootstrap: [AppComponent],
   entryComponents: [TabComponent]
 })

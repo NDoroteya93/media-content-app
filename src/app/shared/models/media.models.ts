@@ -19,10 +19,10 @@ export class Media {
 
       return new Media(
         youtubeData.snippet.thumbnails.high,
-        `'https://www.youtube.com/watch?v=${youtubeData.id.videoId}`,
+        `https://www.youtube.com/watch?v=${youtubeData.id.videoId}`,
         youtubeData.snippet.title,
         youtubeData.snippet.description,
-        `'https://www.youtube.com/watch?v=${youtubeData.id.videoId}`
+        `https://www.youtube.com/watch?v=${youtubeData.id.videoId}`
       );
     } else {
 
@@ -30,7 +30,7 @@ export class Media {
 
        return new Media(
         imageData.pagemap.imageobject ? imageData.pagemap.imageobject[0] : null,
-        imageData.pagemap.cse_image[0].src,
+        imageData.pagemap.cse_image ? imageData.pagemap.cse_image[0].src : null,
         imageData.title,
         imageData.snippet,
         imageData.link

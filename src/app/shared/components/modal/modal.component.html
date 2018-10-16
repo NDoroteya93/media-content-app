@@ -1,0 +1,28 @@
+<div class="modal-header" *ngIf="data">
+  <h5 class="modal-title">{{ data.title }}</h5>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <!-- VIDEOS -->
+  <div *ngIf="data.source.indexOf('youtube') !== -1">
+    <div class="embed-responsive embed-responsive-4by3">
+        <video width="320" height="240" controls>
+            <source [src]="data.source" type="video/mp4">
+        </video>
+    </div>
+    <a class="p-1" [href]="data.source" target="_blank">
+      <h5>{{data.title}}</h5>
+    </a>
+  </div>
+
+  <!-- IMAGES -->
+  <img id="image-gallery-image" class="img-responsive col-md-12" [src]="data.source" *ngIf="data.source.indexOf('youtube') === -1">
+  <p>{{data.description }}!</p>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+</div>

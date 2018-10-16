@@ -1,0 +1,14 @@
+<div class="hovereffect" *ngIf="media">
+  <a class="thumbnail">
+    <img *ngIf="media.thumbnail" class="img-thumbnail img-responsive"
+          [src]="media.thumbnail.url"
+          [alt]="media.title">
+          
+      <div class="overlay">
+        <h2>{{media.title}}</h2>
+      <p class="row justify-content-center">
+        <button type="button" class="btn btn-outline-primary" (click)="open()">Details</button>
+      </p>
+    </div>
+  </a>
+</div>
