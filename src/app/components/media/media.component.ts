@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { MediaService } from '../../core/media/media.service';
 import { Subject } from 'rxjs';
 import { YouTubeData } from 'src/app/shared/interfaces/youtube-data.interface';
@@ -14,26 +14,42 @@ export class MediaComponent implements OnInit {
   public imagesResult: any[];
   public allResult: any[];
   public nextPage: string;
+  public searchActionEmitter = new EventEmitter<string>();
 
   private searchTerm$: Subject<any>;
+  
 
-  constructor(private mediaService: MediaService) {
+  constructor(private mediaService: MediaService, private cf: ChangeDetectorRef) {
     this.videosResult = [];
    }
 
   public ngOnInit(): void {
+    this.searchActionEmitter.subscribe(res => { 
+      switch(res) {
+        case 'image':
+          console.log('image');
+          break;
+        case 'videos':
+          console.log('image');
+          break;
+        default:
+          break;
+          
+      }
+    })
   }
 
   public onSearchVideos(term: Subject<any>, page?: string): void {
     this.searchTerm$ = term;
     this.mediaService.search(term, this.nextPage || null).subscribe(result => {
-      debugger;
+      // this.videosResult = [...this.videosResult, ...result.items];
+      this.videosResult = result.items;
+      this.cf.detectChanges();
+      // debugger;
       if (result.nextPageToken) {
         this.nextPage = result.nextPageToken;
       }
 
-      this.videosResult = [...this.videosResult, ...result.items];
-      this.allResult = result.items;
     });
   }
 

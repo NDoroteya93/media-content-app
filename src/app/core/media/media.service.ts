@@ -16,7 +16,7 @@ export class MediaService {
         filter((value: string) => value.length > 2),
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(result => this.getYoutubeVideos(result))
+        switchMap(result => this.getImages(result))
         );
   }
 
