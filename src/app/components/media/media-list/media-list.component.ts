@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, OnChanges } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Media } from 'src/app/shared/models/media.models';
 
 @Component({
@@ -6,7 +6,7 @@ import { Media } from 'src/app/shared/models/media.models';
   templateUrl: './media-list.component.html',
   styleUrls: ['./media-list.component.scss']
 })
-export class MediaListComponent implements OnChanges {
+export class MediaListComponent {
 
   @Input() public mediaList: Media[];
   @Output() getMoreItems  = new EventEmitter<any>();
@@ -16,15 +16,8 @@ export class MediaListComponent implements OnChanges {
 
   constructor() { }
 
-  public ngOnChanges(currentData) {
-    // if (currentData && currentData.mediaList) {
-    //   this.mediaList = currentData.mediaList;
-    // }
-  }
-
   public onMediaScrollDown(event): void {
     this.getMoreItems.emit();
-    console.log('scrolled');
   }
 
 }

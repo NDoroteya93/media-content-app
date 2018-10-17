@@ -31,10 +31,6 @@ export class MediaService {
   }
 
   public getImages(searchTerm: string, page?: string): Observable<any> {
-    const headers = new HttpHeaders()
-      .set('Content-Type', 'application/json')
-      .set('Cache-Control', 'no-cache');
-    const options = { headers, responseType: 'json' };
 
     return this.httpClient.get(
       `${appConfig.customSearchEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&cx=${appConfig.cx_id}`

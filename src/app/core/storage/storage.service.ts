@@ -50,9 +50,12 @@ export class StorageService {
    * @param {*} data
    * @memberof StorageService
    */
-  public store(key: string, data: any): void {
+  public store(key: string, data: any, notify: boolean = true): void {
     localStorage.setItem(key, JSON.stringify(data));
-    this.onSubject.next({ tabId: key });
+
+    if (notify) {
+      this.onSubject.next({ tabId: key });
+    }
   }
 
   /**

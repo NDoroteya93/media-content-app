@@ -55,14 +55,14 @@ export class MediaComponent implements OnInit, OnDestroy {
       .subscribe(result => {
 
           // Set Images data
-        if (result[TabTypes.IMAGES]) {
-          this.subTabsData[TabTypes.IMAGES].data = result[0].items
+        if (result[TabTypes.IMAGES] && result[TabTypes.IMAGES].items) {
+          this.subTabsData[TabTypes.IMAGES].data = result[TabTypes.IMAGES].items
             .map(item => Media.getFromData(item));
-          this.subTabsData[TabTypes.IMAGES].page = result[0].queries.nextPage;
+          this.subTabsData[TabTypes.IMAGES].page = result[TabTypes.IMAGES].queries.nextPage;
         }
 
-        //   // Set videos data
-        if (result[TabTypes.VIDEOS]) {
+        // Set videos data
+        if (result[TabTypes.VIDEOS] && result[TabTypes.VIDEOS].items) {
           this.subTabsData[TabTypes.VIDEOS].data = result[TabTypes.VIDEOS].items
             .map(item => Media.getFromData(item));
           this.subTabsData[TabTypes.VIDEOS].page = result[TabTypes.VIDEOS].nextPageToken;

@@ -12,6 +12,7 @@ import { TabComponent } from './tab/tab.component';
 import { TabsDirective } from '../../../shared/directives/tabs.directive';
 import { StorageService } from '../../../core/storage/storage.service';
 import { StorageData } from '../../../shared/interfaces/storage.interface';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tabs',
@@ -63,14 +64,15 @@ export class TabsComponent implements AfterContentInit {
    * @memberof TabsComponent
    */
   public selectTab(selectedTab: TabComponent): void {
-    
     // Update active tabs in the template
     this.tabs.toArray().forEach(tab => (tab.active = false));
     this.dynamicTabs.forEach(tab => (tab.active = false));
 
     selectedTab.active = true;
 
-    this.setStorageData(selectedTab.id);
+    !this.isStatic
+      ? this.setStorageData(selectedTab.id)
+      : this.setSubtabData(selectedTab);
   }
 
 
@@ -165,7 +167,6 @@ export class TabsComponent implements AfterContentInit {
     const lastActiveTab = this.storage.getStorage().filter(tab => tab.value.active);
 
     // Set last active element to false
-    if (!this.isStatic) {
       if (lastActiveTab.length > 0) {
         lastActiveTab[0].value.active = false;
         this.storage.store(lastActiveTab[0].key, {...lastActiveTab[0].value});
@@ -176,6 +177,31 @@ export class TabsComponent implements AfterContentInit {
       storageData.active = true;
 
       this.storage.store(id, storageData);
+  }
+
+  /**
+   * @name setSubtabData
+   * @description Get parent tab and set active sub tab
+   *
+   * @private
+   * @param {TabComponent} selectedTab
+   * @memberof TabsComponent
+   */
+  private setSubtabData(selectedTab: TabComponent): void {
+    const parentTab = this.storage.getStorage().filter(tab => tab.value.active);
+    const parentTabId = parentTab[0].key;
+
+    if (parentTab.length > 0 && parentTab[0].value.data) {
+
+      parentTab[0].value.data
+        .forEach(subtab => {
+          subtab.active = false;
+          if (subtab.title === selectedTab.tabTitle) {
+            subtab.active = selectedTab.active;
+          }
+        });
+
+      this.storage.store(parentTabId, parentTab[0].value, false);
     }
   }
 
