@@ -31,9 +31,10 @@ export class MediaService {
   }
 
   public getImages(searchTerm: string, page?: string): Observable<any> {
-
-    return this.httpClient.get(
-      `${appConfig.customSearchEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&cx=${appConfig.cx_id}`
-    );
+    const url = !page
+      ? `${appConfig.customSearchEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&cx=${appConfig.cx_id}&num=10`
+      : `${appConfig.customSearchEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&cx=${appConfig.cx_id}&num=10&start=${page}`;
+      
+    return this.httpClient.get(url);
   }
 }

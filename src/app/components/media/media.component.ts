@@ -8,7 +8,7 @@ import { StorageService } from '../../core/storage/storage.service';
 // Interfaces and Models
 import { SubTabsMapArray, TabTypes } from '../../shared/const/sub-tabs.const';
 import { Media } from 'src/app/shared/models/media.models';
-import { StorageData } from '../../shared/interfaces/storage.interface';
+import { StorageData, TabsData } from '../../shared/interfaces/storage.interface';
 
 @Component({
   selector: 'app-media',
@@ -34,6 +34,7 @@ export class MediaComponent implements OnInit, OnDestroy {
     }
 
   public ngOnInit(): void {
+    // initial object
     this.activeTabData = {
       ...this.storage.getStorage().filter(tab => tab.value.active)[0].value,
       id: this.storage.getStorage().filter(tab => tab.value.active)[0].key
@@ -46,6 +47,13 @@ export class MediaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @name onSearch
+   * @description listening for input event
+   *
+   * @param {Subject<any>} term
+   * @memberof MediaComponent
+   */
   public onSearch(term: Subject<any>): void {
 
     this.getSearchTerm(term);
@@ -69,6 +77,7 @@ export class MediaComponent implements OnInit, OnDestroy {
           this.subTabsData[TabTypes.VIDEOS].page = result[TabTypes.VIDEOS].nextPageToken;
         }
 
+        // if no data after search
         if (!result[TabTypes.VIDEOS].items || !result[TabTypes.IMAGES].items) {
           this.noItems = true;
         }
@@ -85,9 +94,40 @@ export class MediaComponent implements OnInit, OnDestroy {
 
   // Infinite scroll
   public getMoreItems(): void {
-    console.log(this.subTabsData);
+    const activeSubTab = this.subTabsData.filter(tab => tab.active);
+
+    // Check for the active tab 
+    if (activeSubTab.length > 0 && (activeSubTab[0].title === SubTabsMapArray[TabTypes.VIDEOS].title)) {
+
+      this.mediaService
+        .getYoutubeVideos(this.searchTerm, activeSubTab[0].page)
+        .subscribe(data => {
+            const newData = data.items
+            .map(item => Media.getFromData(item));
+
+          this.subTabsData[TabTypes.VIDEOS].data.push(...newData);
+        });
+    } else if (activeSubTab.length > 0 && (activeSubTab[0].title === SubTabsMapArray[TabTypes.IMAGES].title)) {
+
+      this.mediaService
+        .getImages(this.searchTerm, activeSubTab[0].page[0]['nextPage'])
+        .subscribe(data => {
+
+          const newData = data.items
+            .map(item => Media.getFromData(item));
+
+          this.subTabsData[TabTypes.IMAGES].data.push(...newData);
+          });
+    }
   }
 
+  /**
+   * @name getSearchTerm
+   * @description Get the search string from the subject
+   *
+   * @param {Subject<any>} term
+   * @memberof MediaComponent
+   */
   public getSearchTerm(term: Subject<any>): void {
     term.subscribe(result => {
       this.searchTerm = result;
@@ -99,6 +139,12 @@ export class MediaComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @name onChangeTab
+   * @description  listening for change tab events to get tab id
+   *
+   * @memberof MediaComponent
+   */
   public onChangeTab(): void {
 
     this.tabChangeSubs = this.storage.changes

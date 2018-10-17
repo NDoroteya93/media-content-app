@@ -12,7 +12,6 @@ import { TabComponent } from './tab/tab.component';
 import { TabsDirective } from '../../../shared/directives/tabs.directive';
 import { StorageService } from '../../../core/storage/storage.service';
 import { StorageData } from '../../../shared/interfaces/storage.interface';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tabs',
@@ -75,8 +74,6 @@ export class TabsComponent implements AfterContentInit {
       : this.setSubtabData(selectedTab);
   }
 
-
-
   /**
    * @name createInitialTab
    * @description Activate the initial tab
@@ -93,7 +90,6 @@ export class TabsComponent implements AfterContentInit {
 
     this.storage.store(selectedTab.id, { active, data, search });
   }
-
 
   /**
    * @name openTab
