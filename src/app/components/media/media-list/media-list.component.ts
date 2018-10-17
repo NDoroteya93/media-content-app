@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges } from '@angular/core';
-import { YouTubeData } from 'src/app/shared/interfaces/youtube-data.interface';
 import { Media } from 'src/app/shared/models/media.models';
 
 @Component({
@@ -10,10 +9,10 @@ import { Media } from 'src/app/shared/models/media.models';
 export class MediaListComponent implements OnChanges {
 
   @Input() public mediaList: Media[];
-  // @Output() getMoreItems  = new EventEmitter<any>();
+  @Output() getMoreItems  = new EventEmitter<any>();
 
   public mediaScrollDistance = 2;
-  public mediaScrollThrottle = 50;
+  public mediaScrollThrottle = 1000;
 
   constructor() { }
 
@@ -23,8 +22,9 @@ export class MediaListComponent implements OnChanges {
     // }
   }
 
-  public onMediaScrollDown(): void {
-    // this.getMoreItems.emit();
+  public onMediaScrollDown(event): void {
+    this.getMoreItems.emit();
+    console.log('scrolled');
   }
 
 }

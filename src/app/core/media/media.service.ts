@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import appConfig from '../../config/main.config';
-import { filter, debounceTime, distinctUntilChanged, switchMap, mergeMap } from 'rxjs/operators';
+import { filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
 
 @Injectable({
@@ -17,8 +17,7 @@ export class MediaService {
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(result => {
-        // return forkJoin([this.getImages(result), this.getYoutubeVideos(result)]);
-        return this.getYoutubeVideos(result);
+        return forkJoin([this.getImages(result), this.getYoutubeVideos(result)]);
       })
     );
   }

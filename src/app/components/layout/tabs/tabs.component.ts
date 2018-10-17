@@ -47,8 +47,11 @@ export class TabsComponent implements AfterContentInit {
     const activeTabs = this.tabs.filter(tab => tab.active);
 
     // Set first Initial Tab
-    if (activeTabs.length === 0 && !this.tabs.first.id && !this.isStatic) {
-      this.createInitialTab(this.tabs.first);
+    if (activeTabs.length === 0) {
+
+      this.isStatic
+        ? this.selectTab(this.tabs.first)
+        : this.createInitialTab(this.tabs.first);
     }
   }
 
@@ -60,7 +63,7 @@ export class TabsComponent implements AfterContentInit {
    * @memberof TabsComponent
    */
   public selectTab(selectedTab: TabComponent): void {
-
+    
     // Update active tabs in the template
     this.tabs.toArray().forEach(tab => (tab.active = false));
     this.dynamicTabs.forEach(tab => (tab.active = false));

@@ -4,11 +4,12 @@
     infinite-scroll
     [infiniteScrollDistance]="mediaScrollDistance"
     [infiniteScrollThrottle]="mediaScrollThrottle"
-    [scrollWindow]="false"
-    (scrolled)="onMediaScrollDown()"
+    (scrolled)="onMediaScrollDown($event)"
     >
-    <div class="col-lg-3 col-md-4 col-xs-6 thumb" *ngFor="let media of mediaList">
-      <app-media-card [media]="media"></app-media-card>
-    </div>
+    <ng-container *ngFor="let media of mediaList">
+      <div class="col-lg-3 col-md-4 col-xs-6 thumb" *ngIf="media && media.thumbnail && media.thumbnail.url">
+        <app-media-card  [media]="media"></app-media-card>
+      </div>
+    </ng-container>
   </div>
 </ng-container>

@@ -21,8 +21,8 @@ export class MediaComponent implements OnInit, OnDestroy {
   public tabTypes = TabTypes;
   public result;
 
-  public searchTerm: string;
-  public activeTabData;
+  public searchTerm = '';
+  public activeTabData: StorageData;
   private tabChangeSubs: Subscription;
 
   constructor(
@@ -37,9 +37,9 @@ export class MediaComponent implements OnInit, OnDestroy {
     this.activeTabData = {
       ...this.storage.getStorage().filter(tab => tab.value.active)[0].value,
       id: this.storage.getStorage().filter(tab => tab.value.active)[0].key
-    }
+    };
   }
-  
+
   public ngOnDestroy(): void {
     if (this.tabChangeSubs) {
       this.tabChangeSubs.unsubscribe();
@@ -55,22 +55,21 @@ export class MediaComponent implements OnInit, OnDestroy {
       .subscribe(result => {
 
           // Set Images data
-        // if (result[TabTypes.IMAGES]) {
-        //   this.subTabsData[TabTypes.IMAGES].data = result[0].items
-        //     .map(item => Media.getFromData(item));
-        //   this.subTabsData[TabTypes.IMAGES].page = result[0].queries.nextPage;
-        // }
+        if (result[TabTypes.IMAGES]) {
+          this.subTabsData[TabTypes.IMAGES].data = result[0].items
+            .map(item => Media.getFromData(item));
+          this.subTabsData[TabTypes.IMAGES].page = result[0].queries.nextPage;
+        }
 
         //   // Set videos data
-        // if (result[TabTypes.VIDEOS]) {
-        //   this.subTabsData[TabTypes.VIDEOS].data = result[TabTypes.VIDEOS].items
-        //     .map(item => Media.getFromData(item));
-        //   this.subTabsData[TabTypes.VIDEOS].page = result[TabTypes.VIDEOS].nextPageToken;
-        // }
+        if (result[TabTypes.VIDEOS]) {
+          this.subTabsData[TabTypes.VIDEOS].data = result[TabTypes.VIDEOS].items
+            .map(item => Media.getFromData(item));
+          this.subTabsData[TabTypes.VIDEOS].page = result[TabTypes.VIDEOS].nextPageToken;
+        }
 
-        this.result = result.items.map(data => Media.getFromData(data));
-
-        this.activeTabData.data = this.result;
+        // this.result = result.items.map(data => Media.getFromData(data));
+        this.activeTabData.data = this.subTabsData;
         this.activeTabData.search = this.searchTerm;
 
         // Store the new changes
@@ -80,20 +79,35 @@ export class MediaComponent implements OnInit, OnDestroy {
     });
   }
 
-  private onChangeTab(): void {
+  public getMoreItems(): void {
+    console.log(this.subTabsData);
+  }
 
-    this.tabChangeSubs =  this.storage.changes
+  public onChangeTab(): void {
+
+    this.tabChangeSubs = this.storage.changes
       .subscribe((tab: { tabId: string }) => {
-
         const storageData: StorageData = this.storage.getItem(tab.tabId);
 
         this.result = storageData;
         this.searchTerm = storageData.search;
+        this.clearDataOnChangeTab();
+
+        if (storageData.data.length > 0) {
+          this.subTabsData = storageData.data;
+        }
+
+        this.cd.detectChanges();
         // set data in the storage
         this.activeTabData = {
           ...storageData,
           id: tab.tabId
         };
     });
+  }
+
+  private clearDataOnChangeTab(): void {
+    this.subTabsData[TabTypes.VIDEOS].data = [];
+    this.subTabsData[TabTypes.IMAGES].data = [];
   }
 }

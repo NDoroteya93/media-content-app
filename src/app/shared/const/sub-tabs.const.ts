@@ -1,24 +1,26 @@
-import { Media } from '../models/media.models';
+import { TabsData } from '../interfaces/storage.interface';
 
 export enum TabTypes {
     IMAGES,
     VIDEOS
 }
 
-export const SUB_TABS: any = {
+export const SUB_TABS: { [index: number]: TabsData } = {
   [TabTypes.IMAGES]: {
     title: 'Images',
     data: [],
-    page: null
+    page: null,
+    active: true
   },
   [TabTypes.VIDEOS]: {
     title: 'Videos',
     data: [],
-    page: null
+    page: null,
+    active: false
   }
 };
 
-export const SubTabsMapArray: any[] = (function () {
+export const SubTabsMapArray: TabsData[] = (function () {
     const arr = [];
 
     Object.keys(SUB_TABS).forEach(tab => {

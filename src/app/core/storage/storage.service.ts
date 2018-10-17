@@ -75,6 +75,5 @@ export class StorageService {
    */
   private clearLocalStorage(): void {
     localStorage.clear();
-    this.onSubject.complete();
   }
 }
