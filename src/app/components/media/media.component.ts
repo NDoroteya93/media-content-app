@@ -19,10 +19,10 @@ export class MediaComponent implements OnInit, OnDestroy {
 
   public subTabsData = SubTabsMapArray;
   public tabTypes = TabTypes;
-  public result;
-
   public searchTerm = '';
+  public noItems: boolean;
   public activeTabData: StorageData;
+
   private tabChangeSubs: Subscription;
 
   constructor(
@@ -48,7 +48,7 @@ export class MediaComponent implements OnInit, OnDestroy {
 
   public onSearch(term: Subject<any>): void {
 
-    term.subscribe(result => this.searchTerm = result);
+    this.getSearchTerm(term);
 
     this.mediaService
       .search(term)
@@ -59,6 +59,7 @@ export class MediaComponent implements OnInit, OnDestroy {
           this.subTabsData[TabTypes.IMAGES].data = result[TabTypes.IMAGES].items
             .map(item => Media.getFromData(item));
           this.subTabsData[TabTypes.IMAGES].page = result[TabTypes.IMAGES].queries.nextPage;
+
         }
 
         // Set videos data
@@ -68,7 +69,10 @@ export class MediaComponent implements OnInit, OnDestroy {
           this.subTabsData[TabTypes.VIDEOS].page = result[TabTypes.VIDEOS].nextPageToken;
         }
 
-        // this.result = result.items.map(data => Media.getFromData(data));
+        if (!result[TabTypes.VIDEOS].items || !result[TabTypes.IMAGES].items) {
+          this.noItems = true;
+        }
+
         this.activeTabData.data = this.subTabsData;
         this.activeTabData.search = this.searchTerm;
 
@@ -79,8 +83,20 @@ export class MediaComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Infinite scroll
   public getMoreItems(): void {
     console.log(this.subTabsData);
+  }
+
+  public getSearchTerm(term: Subject<any>): void {
+    term.subscribe(result => {
+      this.searchTerm = result;
+      this.noItems = false;
+
+      if (result.trim().length === 0) {
+        this.clearDataOnChangeTab();
+      }
+    });
   }
 
   public onChangeTab(): void {
@@ -89,7 +105,6 @@ export class MediaComponent implements OnInit, OnDestroy {
       .subscribe((tab: { tabId: string }) => {
         const storageData: StorageData = this.storage.getItem(tab.tabId);
 
-        this.result = storageData;
         this.searchTerm = storageData.search;
         this.clearDataOnChangeTab();
 

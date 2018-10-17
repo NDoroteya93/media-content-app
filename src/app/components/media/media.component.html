@@ -3,7 +3,7 @@
   <app-media-search (search)="onSearch($event)"></app-media-search>
   <!-- SUBTABS -->
   <app-tabs [isStatic]="true" 
-    *ngIf="(subTabsData[tabTypes.IMAGES] && subTabsData[tabTypes.IMAGES].data.length > 0) 
+    *ngIf="!noItems && (subTabsData[tabTypes.IMAGES] && subTabsData[tabTypes.IMAGES].data.length > 0) 
       && (subTabsData[tabTypes.VIDEOS] && subTabsData[tabTypes.VIDEOS].data.length)"
   >
     <app-tab *ngFor="let tab of subTabsData" 
@@ -13,6 +13,11 @@
       [active]="tab.active"
     ></app-tab>
   </app-tabs>
+
+    <!-- NO ORDERS ALERT BOX -->
+  <div *ngIf="noItems" class="alert">
+      <app-empty-list [title]="searchTerm" ></app-empty-list>
+  </div>
 </div>
 
 <ng-template let-media="media" #mediaList>

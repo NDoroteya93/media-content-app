@@ -1,0 +1,27 @@
+@import '../../../../assets/scss/base/colors';
+
+.empty-list {
+    padding-top: 15vh;
+    text-align: center;
+    .el-icon {
+        margin-bottom: 25px;
+    }
+    .el-title,
+    .el-message {
+        font-size: 20px;
+        line-height: 1.2;
+        font-weight: 500;
+    }
+    .el-title {
+        margin-bottom: 30px;
+        color: $middle-gray-1;
+    }
+    .el-message {
+        width: 100%;
+        max-width: 730px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        color: $black;
+    }
+}
