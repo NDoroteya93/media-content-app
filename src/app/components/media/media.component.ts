@@ -8,7 +8,7 @@ import { StorageService } from '../../core/storage/storage.service';
 // Interfaces and Models
 import { SubTabsMapArray, TabTypes } from '../../shared/const/sub-tabs.const';
 import { Media } from 'src/app/shared/models/media.models';
-import { StorageData, TabsData } from '../../shared/interfaces/storage.interface';
+import { StorageData } from '../../shared/interfaces/storage.interface';
 
 @Component({
   selector: 'app-media',
@@ -61,7 +61,6 @@ export class MediaComponent implements OnInit, OnDestroy {
     this.mediaService
       .search(term)
       .subscribe(result => {
-
           // Set Images data
         if (result[TabTypes.IMAGES] && result[TabTypes.IMAGES].items) {
           this.subTabsData[TabTypes.IMAGES].data = result[TabTypes.IMAGES].items
@@ -78,7 +77,10 @@ export class MediaComponent implements OnInit, OnDestroy {
         }
 
         // if no data after search
-        if (!result[TabTypes.VIDEOS].items || !result[TabTypes.IMAGES].items) {
+        if (
+            (!result[TabTypes.IMAGES] && !result[TabTypes.IMAGES].items) ||
+            (!result[TabTypes.VIDEOS] && !result[TabTypes.VIDEOS].items)
+            ) {
           this.noItems = true;
         }
 

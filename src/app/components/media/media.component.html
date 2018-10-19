@@ -4,7 +4,7 @@
   <!-- SUBTABS -->
   <app-tabs [isStatic]="true" 
     *ngIf="!noItems && (subTabsData[tabTypes.IMAGES] && subTabsData[tabTypes.IMAGES].data.length > 0) 
-      && (subTabsData[tabTypes.VIDEOS] && subTabsData[tabTypes.VIDEOS].data.length)"
+      || (subTabsData[tabTypes.VIDEOS] && subTabsData[tabTypes.VIDEOS].data.length > 0)"
   >
     <app-tab *ngFor="let tab of subTabsData" 
       [tabTitle]="tab.title" 

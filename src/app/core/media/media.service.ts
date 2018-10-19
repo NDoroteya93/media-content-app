@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import appConfig from '../../config/main.config';
 import { filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
@@ -34,7 +34,7 @@ export class MediaService {
     const url = !page
       ? `${appConfig.customSearchEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&cx=${appConfig.cx_id}&num=10`
       : `${appConfig.customSearchEndpoint}?q=${searchTerm}&key=${appConfig.api_key}&cx=${appConfig.cx_id}&num=10&start=${page}`;
-      
+
     return this.httpClient.get(url);
   }
 }

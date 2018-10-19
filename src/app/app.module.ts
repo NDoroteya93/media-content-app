@@ -1,4 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 // Modules
 import { NgModule } from '@angular/core';
@@ -7,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from './core/core.module';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
 
 // Components
 import { AppComponent } from './app.component';
@@ -17,7 +20,7 @@ import { MediaListComponent } from './components/media/media-list/media-list.com
 import { MediaSearchComponent } from './components/media/media-search/media-search.component';
 import { MediaComponent } from './components/media/media.component';
 import { MediaCardComponent } from './components/media/media-list/media-card/media-card.component';
-
+ 
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,12 +34,14 @@ import { MediaCardComponent } from './components/media/media-list/media-card/med
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     SharedModule,
     CoreModule,
     ReactiveFormsModule,
     FormsModule,
-    InfiniteScrollModule, 
-    NgbModule
+    InfiniteScrollModule,
+    NgbModule,
+    ToastrModule.forRoot()
   ],
   bootstrap: [AppComponent],
   entryComponents: [TabComponent]
